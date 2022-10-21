@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react"
 import axios from "axios" // send data to server
 import { toast } from "react-toastify" // pop-up message success/failure ...
-
 import { useNavigate } from "react-router-dom"
+
 import styles from "../../components/stylesheets/form.module.scss"
 import SideBar from '../../components/side-bar/SideBar'
+import { useShoppingCart } from "../../context/ShoppingCartContext";
 
-function Profile({setUserData}) {
+function Profile() {
+  const { setUserData } = useShoppingCart()
 
   // userdata from local storage
   const userData = JSON.parse(localStorage.getItem("user_data")) // converts string of user_data into a constructed object
@@ -42,7 +44,7 @@ function Profile({setUserData}) {
     try {
       let response = await axios.put(
         // run axios call to update in mongo.
-        `${process.env.USER_BASE_URL}/profile/${userDetails.userId}/editProfile`,
+        `${process.env.REACT_APP_USER_BASE_URL}/profile/${userDetails.userId}/editProfile`,
         {
           fullName: userDetails.fullName,
           preferredName: userDetails.preferredName,
@@ -70,7 +72,7 @@ function Profile({setUserData}) {
     try {
       let response = await axios.put(
         // run axios call to update in mongo.
-        `${process.env.USER_BASE_URL}/profile/${userDetails.userId}/changePassword`,
+        `${process.env.REACT_APP_USER_BASE_URL}/profile/${userDetails.userId}/changePassword`,
         {
           currentPassword: userPassword.currentPassword,
           newPassword: userPassword.newPassword,

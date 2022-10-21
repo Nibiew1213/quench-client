@@ -3,12 +3,11 @@ import React, { useEffect, useState } from "react";
 
 import BeverageCard from "./beverage-card/BeverageCard";
 import BeverageCardPlaceHolder from "./beverage-card/BeverageCardPlaceholder";
-import Spinner from "react-bootstrap/Spinner";
 import styles from './beverage-card/beverage-card.module.scss'
 
-const baseURL = `${process.env.BEVERAGES_BASE_URL}`;
+const baseURL = process.env.REACT_APP_BEVERAGES_BASE_URL;
 
-function Beverages({lineItems, setUserCart, setTotalItemsTotal}) {
+function Beverages() {
     const [beverages, setBeverages] = useState([]);
     
     useEffect(() => {
@@ -20,7 +19,7 @@ function Beverages({lineItems, setUserCart, setTotalItemsTotal}) {
     }, []);
 
     const beverageCards = beverages.map((beverage) => (
-        <BeverageCard key={beverage._id} data={beverage} lineItems={lineItems} setUserCart={setUserCart} setTotalItemsTotal={setTotalItemsTotal} />
+        <BeverageCard key={beverage._id} beverage={beverage} />
     ));
 
     console.log(beverages)
@@ -34,6 +33,8 @@ function Beverages({lineItems, setUserCart, setTotalItemsTotal}) {
                 ) : (
                     <>
                     <div className="d-flex flex-wrap">
+                        <BeverageCardPlaceHolder />
+                        <BeverageCardPlaceHolder />
                         <BeverageCardPlaceHolder />
                         <BeverageCardPlaceHolder />
                         <BeverageCardPlaceHolder />

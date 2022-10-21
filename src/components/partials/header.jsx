@@ -4,12 +4,16 @@ import { icon } from '@fortawesome/fontawesome-svg-core/import.macro'
 import { toast } from "react-toastify"; 
 import jwt_decode from 'jwt-decode'
 
+import { useShoppingCart } from "../../context/ShoppingCartContext";
 import styles from './header.module.scss'
 // import Logout from "../logout/Logout";
 
 
-function Header({totalItemsInCart, setTotalItemsTotal, userData, setUserData}) {
-    console.log("header userData", userData)
+function Header() {
+    // using custom hook
+    const {totalItemsInCart, setTotalItemsTotal, userData, setUserData} = useShoppingCart()
+    // const {cart, totalItemsInCart} = useShoppingCart()
+
     const navigate = useNavigate()
 
     //get user token to show "Profile" rather than "Login/Register"

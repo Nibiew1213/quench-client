@@ -8,11 +8,13 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 
 import ImageComponent from "../../components/image-component/ImageComponent";
+import { useShoppingCart } from "../../context/ShoppingCartContext";
 
 // const userData = JSON.parse(localStorage.getItem("user_data")) 
-const baseBeveragesURL = `${process.env.BEVERAGES_BASE_URL}`;
+const baseBeveragesURL = `${process.env.REACT_APP_BEVERAGES_BASE_URL}`;
 
-function BeverageDetails({ setUserCart, setTotalItemsTotal, userData }) {
+function BeverageDetails() {
+    const { userData, setUserCart, setTotalItemsTotal, setCartTotalPrice } = useShoppingCart()
 
     const { beverageId } = useParams();
     const [beverage, setBeverage] = useState(null);
@@ -27,7 +29,7 @@ function BeverageDetails({ setUserCart, setTotalItemsTotal, userData }) {
     }, [beverageId]);
 
     const addToCart = () => {
-        const baseUsersURL = `${process.env.USER_BASE_URL}/${userData.userId}`;
+        const baseUsersURL = `${process.env.REACT_APP_USER_BASE_URL}/${userData.userId}`;
 
         const axiosCall = async () => {
             try {
@@ -39,9 +41,11 @@ function BeverageDetails({ setUserCart, setTotalItemsTotal, userData }) {
 
                 const getUpdatedCart = await axios.get(`${baseUsersURL}/cart`)
                 const totalItemsInCart = getUpdatedCart.data.lineItems.reduce((previousValue, currentValue) => previousValue + (currentValue.quantity), 0)
-                
+                const cartSum = getUpdatedCart.data.lineItems.reduce((previousValue, currentValue) => previousValue + (currentValue.quantity * currentValue.product.price), 0)
+
                 setUserCart(getUpdatedCart.data)
                 setTotalItemsTotal(totalItemsInCart)
+                setCartTotalPrice(cartSum)
                 
 
                 const updatedBeverageDetails = await axios.get(`${baseBeveragesURL}/${beverageId}`);

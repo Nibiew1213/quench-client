@@ -12,8 +12,7 @@ import Login from './pages/login/Login';
 import NotFound from "./pages/not-found/NotFound";
 import Profile from './pages/profile/Profile';
 import Register from './pages/register/Register';
-// import SavedListings from './pages/profile/SavedListings';
-// import OrderHistory from './pages/profile/OrderHistory';
+import { ShoppingCartProvider } from "./context/ShoppingCartContext";
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
@@ -21,71 +20,70 @@ import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
 
-    const userLoggedIn = localStorage.getItem("user_token")
+    // const userLoggedIn = localStorage.getItem("user_token")
    
-    const [userData, setUserData] = useState({})
+    // const [userData, setUserData] = useState({})
 
-    const [isFetchingCart, setFetchingCart] = useState(true)
-    const [userCart, setUserCart] = useState({})
-    const [cartTotalPrice, setCartTotalPrice] = useState(0.00)
-    const [totalItemsInCart, setTotalItemsTotal] = useState(0)
+    // const [isFetchingCart, setFetchingCart] = useState(true)
+    // const [userCart, setUserCart] = useState({})
+    // const [cartTotalPrice, setCartTotalPrice] = useState(0.00)
+    // const [totalItemsInCart, setTotalItemsTotal] = useState(0)
 
-    useEffect(() => {
-        if (userLoggedIn) {
+    // useEffect(() => {
+    //     if (userLoggedIn) {
             
-            let userId = userData.userId
+    //         let userId = userData.userId
 
     
-            //cart with items
-            const userBaseURL = `${process.env.USER_BASE_URL}/${userId}/cart`;
+    //         //cart with items
+    //         const userBaseURL = `${process.env.REACT_APP_USER_BASE_URL}/${userId}/cart`;
             
-            const getCart = async () => {
+    //         const getCart = async () => {
         
-                try {
-                    const response = await axios.get(userBaseURL)
-                    setUserCart(response.data)
-                    console.log("response.data: ", response.data)
+    //             try {
+    //                 const response = await axios.get(userBaseURL)
+    //                 setUserCart(response.data)
+    //                 console.log("response.data: ", response.data)
     
     
-                    const cartSum = response.data.lineItems.reduce((previousValue, currentValue) => previousValue + (currentValue.quantity * currentValue.product.price), 0)
-                    setCartTotalPrice(cartSum)
+    //                 const cartSum = response.data.lineItems.reduce((previousValue, currentValue) => previousValue + (currentValue.quantity * currentValue.product.price), 0)
+    //                 setCartTotalPrice(cartSum)
     
-                    const totalItemsInCart = response.data.lineItems.reduce((previousValue, currentValue) => previousValue + (currentValue.quantity), 0)
-                    setTotalItemsTotal(totalItemsInCart)
-                    setFetchingCart(false)
+    //                 const totalItemsInCart = response.data.lineItems.reduce((previousValue, currentValue) => previousValue + (currentValue.quantity), 0)
+    //                 setTotalItemsTotal(totalItemsInCart)
+    //                 setFetchingCart(false)
         
-                } catch (error) {
-                    console.log(error)
-                    return
-                }
-            }
+    //             } catch (error) {
+    //                 console.log(error)
+    //                 return
+    //             }
+    //         }
     
-           getCart().catch(console.error);
-        }
+    //        getCart().catch(console.error);
+    //     }
 
-    },[userLoggedIn]);
-    
-    console.log(userCart)
+    // },[userLoggedIn]);
+
     return (
         <div className="App">
-            
-                <Header setTotalItemsTotal={setTotalItemsTotal} totalItemsInCart={totalItemsInCart} userData={userData} setUserData={setUserData}/>
+            <ShoppingCartProvider >
+                <Header />
 
                 <Routes>
                     <Route path="/" />
-                    <Route path="/beverages" element={<Beverages setUserCart={setUserCart} setTotalItemsTotal={setTotalItemsTotal}/>} />
-                    <Route path="/beverages/:beverageId"element={<BeverageDetails userData={userData} setUserCart={setUserCart} setTotalItemsTotal={setTotalItemsTotal}/>} />
-                    <Route path="/users/auth/login" element={<Login setUserData={setUserData}/>} />
+                    <Route path="/beverages" element={<Beverages />} />
+                    <Route path="/beverages/:beverageId"element={<BeverageDetails  />} />
+                    <Route path="/users/auth/login" element={<Login />} />
                     <Route path="/users/auth/register" element={<Register />} />
-                    <Route path="/users/profile/:userId" element={<Profile setUserData={setUserData} />} />
-                    <Route path="/users/:userId/cart" element={<Cart isFetchingCart={isFetchingCart} userCart={userCart} cartTotalPrice={cartTotalPrice} totalItemsInCart={totalItemsInCart} setUserCart={setUserCart} setTotalItemsTotal={setTotalItemsTotal} setCartTotalPrice={setCartTotalPrice}/>} />
+                    <Route path="/users/profile/:userId" element={<Profile  />} />
+                    <Route path="/users/:userId/cart" element={<Cart  />} />
                     <Route path= "*" element={<NotFound />}/>
                     {/* <Route path="/users/savedListings/:userId" element={<SavedListings />} />
                     <Route path="/users/orderHistory/:userId" element={<OrderHistory />} /> */}
                 </Routes>
 
                 <ToastContainer />
-           
+            </ShoppingCartProvider>
         </div>
     );
 }
